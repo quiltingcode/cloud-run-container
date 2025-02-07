@@ -6,7 +6,7 @@ FROM python:3.12-slim
 # what code
 # COPY SRC folder and requirements.txt file into the container
 
-COPY ./src /app/
+COPY . /app
 WORKDIR /app/
 
 #default installs
@@ -18,15 +18,18 @@ RUN apt-get update && \
     gcc \
     make
 
-
 # create a virt env
 RUN python3 -m venv /opt/venv && \
     /opt/venv/bin/python -m pip install pip --upgrade && \
     /opt/venv/bin/python -m pip install -r /app/requirements.txt
 
+# purge unused
 RUN apt-get remove -y --purge make gcc build-essential \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
+
+# make entrypoint executable
+RUN chmod +x entrypoint.sh
 
 # run app
 
