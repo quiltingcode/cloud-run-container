@@ -21,7 +21,7 @@ RUN apt-get update && \
 # create a virt env
 RUN python3 -m venv /opt/venv && \
     /opt/venv/bin/python -m pip install pip --upgrade && \
-    /opt/venv/bin/python -m pip install -r /app/requirements.txt
+    /opt/venv/bin/python -m pip install -r /app/src/requirements.txt
 
 # purge unused
 RUN apt-get remove -y --purge make gcc build-essential \
@@ -29,8 +29,8 @@ RUN apt-get remove -y --purge make gcc build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # make entrypoint executable
-RUN chmod +x entrypoint.sh
+RUN chmod +x ./src/entrypoint.sh
 
 # run app
 
-CMD ["./entrypoint.sh"]
+CMD ["./src/entrypoint.sh"]
