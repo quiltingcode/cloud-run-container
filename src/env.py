@@ -9,7 +9,7 @@ print(ENV_PATH)
 
 @lru_cache()
 def get_config():
-    if ENV_PATH.exists:
+    if ENV_PATH.exists():
         return Config(RepositoryEnv(str(ENV_PATH)))
     from decouple import config
     return config
