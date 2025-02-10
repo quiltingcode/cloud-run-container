@@ -17,5 +17,8 @@ scripts:
     - gcloud artifacts repositories create serverless-py-repo --repository-format=docker --location=europe-southwest1
   push: 
     - docker build --platform=linux/amd64 -f Dockerfile -t cloud-run-container-amd64 .
-    - docker tag cloud-run-container-amd64 europe-southwest1-docker.pkg.dev/<project-id>/<repo-name>/<image-name>:<tag-name>
-    - docker push
+    - docker tag cloud-run-container-amd64 europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py:latest
+    - docker tag cloud-run-container-amd64 europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py:v1
+    - docker push europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py --all-tags
+  deploy:
+    - gcloud run deploy serverless-py-test-run --image=europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py:latest --allow-unauthenticated --region=europe-southwest1 --project=serverless-py-test
