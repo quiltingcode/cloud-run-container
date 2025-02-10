@@ -40,7 +40,11 @@ jobs:
       - name: Build container image
         run: |
           docker build --platform=linux/amd64 -f Dockerfile -t cloud-run-container .
-          docker tag cloud-run-container-amd64 europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py:latest
-          docker tag cloud-run-container-amd64 europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py:v1
-          docker push europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py --all-tags
-
+          docker tag cloud-run-container ${{ secrets.CONTAINER_IMAGE_URL }}:latest
+          docker push ${{ secrets.CONTAINER_IMAGE_URL }} --all-tags
+      - name: Deploy container to Cloud run
+        run: |
+          gcloud run deploy serverless-py-test-run --image=${{ secrets.CONTAINER_IMAGE_URL }}:latest \
+          --allow-unauthenticated \
+          --region=${{ secrets.GCLOUD_REGION }} \
+          --project=${{ secrets.GCLOUD_PROJECT_ID }}
