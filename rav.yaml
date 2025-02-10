@@ -6,7 +6,8 @@ scripts:
   empty-build: docker build -f Dockerfile.empty -t empty-py .
   empty-shell: docker exec -it empty_py /bin/bash
   empty-run: docker run -p 8001:8000 --rm --name empty_py -it empty-py
-  run-env-inline: docker run -e MODE=stage -p 8000:8000 --rm --name cloud-run-container -it cloud-run-container
+  container_stage: docker run -e MODE=stage -p 8000:8000 --rm --name cloud-run-container -it cloud-run-container
+  container_prod: docker run -e PORT=8001 --env-file .env-prod -e MODE=PRODA -p 8000:8001 --rm --name cloud-run-container -it cloud-run-container
   run: docker run --env-file .env-prod -p 8000:8000 --rm --name cloud-run-container -it cloud-run-container
   build_run:
     - rav run build
