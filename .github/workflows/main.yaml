@@ -27,7 +27,7 @@ jobs:
           pytest src/tests.py
 
 
-  build_deploy:
+  build_push:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -39,5 +39,8 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - name: Build container image
         run: |
-          docker build -f Dockerfile -t cloud-run-container .
+          docker build --platform=linux/amd64 -f Dockerfile -t cloud-run-container .
+          docker tag cloud-run-container-amd64 europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py:latest
+          docker tag cloud-run-container-amd64 europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py:v1
+          docker push europe-southwest1-docker.pkg.dev/serverless-py-test/serverless-py-repo/serverless-py --all-tags
 
