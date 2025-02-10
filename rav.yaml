@@ -1,6 +1,6 @@
 scripts:
-  runserver: uvicorn src.main:app --reload
-  installs: venv/bin/python -m pip install -r requirements.txt
+  runserver: GCLOUD_SECRET_LABEL=123 uvicorn src.main:app --reload
+  installs: venv/bin/python -m pip install -r src/requirements.txt
   test: pytest src/tests.py
   build: docker build -f Dockerfile -t cloud-run-container .
   empty-build: docker build -f Dockerfile.empty -t empty-py .
@@ -9,6 +9,8 @@ scripts:
   container_stage: docker run -e MODE=stage -p 8000:8000 --rm --name cloud-run-container -it cloud-run-container
   container_prod: docker run -e PORT=8001 --env-file .env-prod -e MODE=PRODA -p 8000:8001 --rm --name cloud-run-container -it cloud-run-container
   run: docker run --env-file .env-prod -p 8000:8000 --rm --name cloud-run-container -it cloud-run-container
+  update_prod_secrets:
+    - gcloud secrets versions add py_env_file --data-file .env-prod
   build_run:
     - rav run build
     - rav run run
