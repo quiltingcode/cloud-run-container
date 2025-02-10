@@ -46,12 +46,12 @@ jobs:
         run: |
           docker build --platform=linux/amd64 -f Dockerfile -t cloud-run-container .
           docker tag cloud-run-container ${{ secrets.CONTAINER_IMAGE_URL }}:latest
-          docker tag cloud-run-container ${{ secrets.CONTAINER_IMAGE_URL }}:${{ GITHUB_RUN_ID }}
+          docker tag cloud-run-container ${{ secrets.CONTAINER_IMAGE_URL }}:${GITHUB_RUN_ID}
           gcloud auth configure-docker ${{ secrets.GCLOUD_REGION }}-docker.pkg.dev
           docker push ${{ secrets.CONTAINER_IMAGE_URL }} --all-tags
       - name: Deploy container to Cloud run
         run: |
-          gcloud run deploy serverless-py-test-run --image=${{ secrets.CONTAINER_IMAGE_URL }}:${{ GITHUB_RUN_ID }} \
+          gcloud run deploy serverless-py-test-run --image=${{ secrets.CONTAINER_IMAGE_URL }}:${GITHUB_RUN_ID} \
           --allow-unauthenticated \
           --region=${{ secrets.GCLOUD_REGION }} \
           --project=${{ secrets.GCLOUD_PROJECT_ID }}
