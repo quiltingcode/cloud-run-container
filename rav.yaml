@@ -15,4 +15,7 @@ scripts:
   configure:
     - gcloud auth configure-docker europe-southwest1-docker.pkg.dev
     - gcloud artifacts repositories create serverless-py-repo --repository-format=docker --location=europe-southwest1
-  push: docker push
+  push: 
+    - docker build --platform=linux/amd64 -f Dockerfile -t cloud-run-container-amd64 .
+    - docker tag cloud-run-container-amd64 europe-southwest1-docker.pkg.dev/<project-id>/<repo-name>/<image-name>:<tag-name>
+    - docker push
